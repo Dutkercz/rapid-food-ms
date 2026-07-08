@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: user
+  datasource:
+    username: "root"
+    password: "$CDB1234r"
+    url: "jdbc:mysql://localhost:3306/rapid-food_users?createDatabaseIfNotExist=true"
+
+kafka:
+  botstrap-server: "localhost:29092"
+server:
+  port: 8084

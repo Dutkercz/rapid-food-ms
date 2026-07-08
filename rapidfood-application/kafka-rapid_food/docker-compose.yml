@@ -1,0 +1,37 @@
+services:
+  zookeeper_rapid-food:
+    image: confluentinc/cp-zookeeper:7.2.15
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+
+  kafka_rapid-food:
+    image: confluentinc/cp-kafka:7.2.15
+    depends_on:
+      - zookeeper_rapid-food
+    environment:
+      KAFKA_BROOKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper_rapid-food:2181
+      #     aqui para definir as portas a primeira é como outros se conecta atraves da rede do docker ->
+      #                                                                     PLAINTEXT://[nome_do_serviço]:9092
+      #     a segunda é como me conecto localmente ao kafka ->  PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_rapid-food:9092, PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT, PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_MAP: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "29092:29092"
+
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    depends_on:
+      - kafka_rapid-food
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka_rapid-food:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper_rapid-food:2181
+    ports:
+      - "8090:8080"

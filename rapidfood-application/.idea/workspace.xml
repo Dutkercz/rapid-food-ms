@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="996a8e26-9d73-455b-90f4-9e8ffa61f980" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../rapid-food-api" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000000005609144" />
+      <entry key="S5" value="1.0001993235783841" />
+      <entry key="S10" value="1.0141182002530136" />
+      <entry key="S30" value="1.2416944322750019" />
+      <entry key="S60" value="1.4960352515876236" />
+      <entry key="M2" value="1.9073923402203787" />
+      <entry key="M5" value="5.347122394278833" />
+      <entry key="M10" value="13.493666735859014" />
+      <entry key="M15" value="21.087146252169358" />
+      <entry key="M30" value="37.66034015535711" />
+      <entry key="H1" value="54.163576379977755" />
+      <entry key="H2" value="66.47678475963276" />
+      <entry key="H4" value="74.11602483509968" />
+      <entry key="D1" value="81.42312264215548" />
+      <entry key="W1" value="82.77223530242537" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="6.5171185916470626E-108" />
+      <entry key="S2" value="1.5977686882990436E-27" />
+      <entry key="S5" value="1.9116375926010833E-11" />
+      <entry key="S10" value="4.372227798961398E-6" />
+      <entry key="S30" value="0.01635187713355182" />
+      <entry key="S60" value="0.1279507348435235" />
+      <entry key="M2" value="0.3891030131940646" />
+      <entry key="M5" value="2.0028072710639075" />
+      <entry key="M10" value="5.874144645960211" />
+      <entry key="M15" value="9.14047891776897" />
+      <entry key="M30" value="15.316675857350093" />
+      <entry key="H1" value="20.673058069550375" />
+      <entry key="H2" value="24.352959471971626" />
+      <entry key="H4" value="26.537113885520306" />
+      <entry key="D1" value="28.568322480041402" />
+      <entry key="W1" value="28.937786571089184" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.8247671492125717E-4" />
+      <entry key="MS500" value="0.17874812329521134" />
+      <entry key="S2" value="0.65022007337527" />
+      <entry key="S5" value="0.8419299272152231" />
+      <entry key="S10" value="0.9275368119339195" />
+      <entry key="S30" value="1.202661891385253" />
+      <entry key="S60" value="1.5784791795931274" />
+      <entry key="M2" value="2.263481672619551" />
+      <entry key="M5" value="7.322219742707185" />
+      <entry key="M10" value="19.33693893833454" />
+      <entry key="M15" value="30.19760917423006" />
+      <entry key="M30" value="52.95339409393258" />
+      <entry key="H1" value="74.82118895068936" />
+      <entry key="H2" value="90.82078368115067" />
+      <entry key="H4" value="100.64829159018356" />
+      <entry key="D1" value="109.99058037469631" />
+      <entry key="W1" value="111.70989685877517" />
+    </decayedShown>
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.kafka-rapid_food: Compose Deployment.executor": "Run",
+    "Maven.order [clean,install].executor": "Run",
+    "Maven.user [clean,install].executor": "Run",
+    "Maven.user [install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "Spring Boot.OrderApplication.executor": "Run",
+    "Spring Boot.PaymentApplication.executor": "Run",
+    "Spring Boot.ProductApplication.executor": "Run",
+    "Spring Boot.UserApplication (1).executor": "Run",
+    "Spring Boot.UserApplication.executor": "Run",
+    "Spring Boot.VendorApplication.executor": "Run",
+    "git-widget-placeholder": "<unknown>",
+    "last_opened_file_path": "C:/Users/cristian.rosa/Desktop/AR - Desafios/ms-rapid-food/vendor/src/main/resources",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\cristian.rosa\Desktop\AR - Desafios\ms-rapid-food\vendor\src\main\resources" />
+      <recent name="C:\Users\cristian.rosa\Desktop\AR - Desafios\ms-rapid-food\product\src\main\java\com\db\ar\product" />
+      <recent name="C:\Users\cristian.rosa\Desktop\AR - Desafios\ms-rapid-food\payment\src\main\java\com\db\ar\payment" />
+      <recent name="C:\Users\cristian.rosa\Desktop\AR - Desafios\ms-rapid-food\order\src\main\java\com\db\ar\order" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\cristian.rosa\Desktop\AR - Desafios\ms-rapid-food\order\src\main\java\com\db\ar" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.db.ar" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+    <option name="hiddenConfigurations">
+      <map>
+        <entry key="SpringBootApplicationConfigurationType">
+          <value>
+            <set>
+              <option value="UserApplication" />
+            </set>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="configurationStatuses">
+      <map>
+        <entry key="SpringBootApplicationConfigurationType">
+          <value>
+            <map>
+              <entry key="PaymentApplication" value="STOPPED" />
+              <entry key="ProductApplication" value="STOPPED" />
+              <entry key="UserApplication" value="STOPPED" />
+              <entry key="VendorApplication" value="STOPPED" />
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.UserApplication">
+    <configuration name="OrderApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="order" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.db.ar.OrderApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PaymentApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="payment" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.db.ar.PaymentApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="product" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.db.ar.ProductApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ALTERNATIVE_JRE_PATH" value="ms-21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="user" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.db.ar.UserApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VendorApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="vendor" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.db.ar.VendorApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="kafka-rapid_food: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="kafka-rapid_food/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.kafka-rapid_food: Compose Deployment" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+</project>

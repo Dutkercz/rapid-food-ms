@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: product
+  datasource:
+    username: "root"
+    password: "$CDB1234r"
+    url: "jdbc:mysql://localhost:3306/rapid-food_products?createDatabaseIfNotExist=true"
+server:
+  port: 8083

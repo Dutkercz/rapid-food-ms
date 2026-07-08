@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: vendor
+  profiles:
+    active: "mysql"
+server:
+  port: 8085
