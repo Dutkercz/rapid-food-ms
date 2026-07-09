@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/vendors")
+@RequestMapping("/api/vendors")
 @RequiredArgsConstructor
 @Tag(name = "Gestão de Restaurantes", description = "Endpoints para gerenciar os restaurantes parceiros")
 public class VendorController {
@@ -54,7 +54,7 @@ public class VendorController {
             @ApiResponse(responseCode = "404", description = "Restaurante nao encontrado", content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<VendorResponse> findById(@PathVariable UUID id) {
+        public ResponseEntity<VendorResponse> findById(@PathVariable UUID id) {
         Vendor vendor = vendorService.findById(id);
         return ResponseEntity.ok(vendorMapper.toResponse(vendor));
     }

@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ProductResponseDto(
-    UUID id,
-    String vendorName,
-    String productName,
-    BigDecimal price,
-    String description,
-    LocalDateTime createdAt, LocalDateTime updatedAt) {
+        UUID id,
+        String productName,
+        String description,
+        BigDecimal price,
+        UUID vendorId,
+        String vendorName,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
 }

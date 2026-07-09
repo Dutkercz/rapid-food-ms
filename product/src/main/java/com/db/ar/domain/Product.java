@@ -20,8 +20,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-//    @ManyToOne
-//    private Vendor vendor;
+    @Column(nullable = false)
+    private UUID vendorId;
+
+    @Column(nullable = false)
+    private String vendorName;
 
     @Column(nullable = false)
     private String productName;

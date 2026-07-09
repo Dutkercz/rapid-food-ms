@@ -5,17 +5,23 @@ import com.db.ar.dto.ProductRequestDto;
 import com.db.ar.dto.ProductResponseDto;
 import com.db.ar.dto.ProductUpdateDto;
 import com.db.ar.exception.BusinessException;
+import com.db.ar.feign.VendorFeignClient;
+import com.db.ar.feign.dtos.VendorFeignDto;
 import com.db.ar.mapper.ProductMapper;
 import com.db.ar.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,12 +30,16 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-//    private final VendorRepository vendorRepository;
+    private final VendorFeignClient vendorFeign;
 
-//    private Vendor findVendorById(UUID id) {
-//        return vendorRepository.findById(id)
-//               .orElseThrow(() -> new EntityNotFoundException("Vendor with id " + id + " not found"));
-//    }
+    private VendorFeignDto findVendorById(UUID vendorId) {
+        var response = vendorFeign.findById(vendorId);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendor with id " + vendorId + " not found");
+        }
+    }
 
     private Product findProduct(UUID id) {
         return productRepository.findById(id)
@@ -43,21 +53,21 @@ public class ProductService {
         return productPrice.compareTo(BigDecimal.ZERO) <= 0;
     }
 
+    @Transactional
     public ProductResponseDto createProduct(@Valid ProductRequestDto requestDto) {
-        Product product = productMapper.toEntity(requestDto);
-        if (isInvalidProductPrice(product.getPrice())) {
+        if (isInvalidProductPrice(requestDto.price())) {
             throw new BusinessException("Price must be greater than 0");
         }
-//        Vendor vendor = findVendorById(requestDto.vendorId());
-       // product.setVendor(vendor);
+        var vendor = findVendorById(requestDto.vendorId());
+        var product = productMapper.toEntity(requestDto, vendor);
         productRepository.save(product);
         return productMapper.toDto(product);
     }
 
     public List<ProductResponseDto> getAllProducts(UUID vendorId) {
-//        findVendorById(vendorId);
-        return null;//productRepository.findAllByVendorId(vendorId)
-                               // .stream().map(productMapper::toDto).toList();
+        findVendorById(vendorId);
+        return productRepository.findAllByVendorId(vendorId)
+                                .stream().map(productMapper::toDto).toList();
     }
 
     @Transactional
@@ -81,5 +91,9 @@ public class ProductService {
 //                 new EntityNotFoundException("Product with this ID and vendor ID found"));
 //        productRepository.delete(product);
 
+    }
+
+    public ProductResponseDto getById(UUID productId) {
+        return productMapper.toDto(findProduct(productId));
     }
 }
