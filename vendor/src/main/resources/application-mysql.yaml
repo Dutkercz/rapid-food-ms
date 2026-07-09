@@ -3,5 +3,8 @@ spring:
     username: "root"
     password: "$CDB1234r"
     url: "jdbc:mysql://localhost:3306/rapid-food_vendors?createDatabaseIfNotExist=true"
+  jpa:
+    hibernate:
+      ddl-auto: update
 server:
   port: 8085

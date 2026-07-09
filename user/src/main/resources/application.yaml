@@ -5,6 +5,9 @@ spring:
     username: "root"
     password: "$CDB1234r"
     url: "jdbc:mysql://localhost:3306/rapid-food_users?createDatabaseIfNotExist=true"
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 kafka:
   botstrap-server: "localhost:29092"
