@@ -1,8 +1,7 @@
 package com.db.ar.domain;
 
-import br.com.db.rapid_food_api.order.domain.enums.OrderStatus;
-import br.com.db.rapid_food_api.user.domain.User;
-import br.com.db.rapid_food_api.vendors.domain.Vendor;
+
+import com.db.ar.domain.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,11 +42,12 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
 
-    @ManyToOne
-    private User user;
+    private UUID userId;
 
-    @ManyToOne
-    private Vendor vendor;
+    private String userName;
+
+//    @ManyToOne
+//    private Vendor vendor;
 
     public Order() {
         init();

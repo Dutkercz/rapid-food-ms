@@ -1,7 +1,6 @@
 package com.db.ar.dto;
 
-import br.com.db.rapid_food_api.order.domain.enums.OrderStatus;
-
+import com.db.ar.domain.enums.OrderStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;

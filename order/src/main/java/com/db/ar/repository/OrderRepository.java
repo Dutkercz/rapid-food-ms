@@ -1,6 +1,6 @@
 package com.db.ar.repository;
 
-import br.com.db.rapid_food_api.order.domain.Order;
+import com.db.ar.domain.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("""
            SELECT o FROM Order o
-           where o.user.id = :userId
+           where o.userId = :userId
            ORDER BY o.createdAt DESC
            """)
     Page<Order> findAllByUserOrderedDesc(@Param("userId") UUID userId, Pageable pageable);

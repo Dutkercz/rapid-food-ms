@@ -1,15 +1,19 @@
 package com.db.ar.controller;
 
-import br.com.db.rapid_food_api.order.dto.OrderCancelReasonDto;
-import br.com.db.rapid_food_api.order.dto.OrderRequestDto;
-import br.com.db.rapid_food_api.order.dto.OrderResponseDto;
-import br.com.db.rapid_food_api.order.dto.OrderStatusDto;
-import br.com.db.rapid_food_api.order.service.OrderService;
+import com.db.ar.dto.OrderCancelReasonDto;
+import com.db.ar.dto.OrderRequestDto;
+import com.db.ar.dto.OrderResponseDto;
+import com.db.ar.dto.OrderStatusDto;
+import com.db.ar.feign.dtos.ProductFeignDto;
+import com.db.ar.feign.dtos.UserFeignDto;
+import com.db.ar.feign.dtos.VendorFeignDto;
+import com.db.ar.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -34,6 +38,26 @@ public class OrderController {
     public ResponseEntity<OrderStatusDto> viewOrderStatus(@PathVariable UUID id) {
         return ResponseEntity.ok(orderService.viewOrderStatus(id));
     }
+
+    //================= supplier init
+    @GetMapping("/vendor/{vendorId}")
+    public ResponseEntity<VendorFeignDto> viewOrderVendor(@PathVariable UUID vendorId) {
+        return ResponseEntity.ok(orderService.getVendor(vendorId));
+    }
+
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<UserFeignDto> viewOrderClient(@PathVariable UUID clientId) {
+        return ResponseEntity.ok(orderService.getClient(clientId));
+    }
+
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<ProductFeignDto> viewOrderProduct(@PathVariable UUID productId) {
+        return ResponseEntity.ok(orderService.getProduct(productId));
+    }
+
+
+
+    //========= end
 
     @PutMapping("/cancel/{id}")
     public ResponseEntity<OrderStatusDto> cancelOrder(@PathVariable UUID id,
