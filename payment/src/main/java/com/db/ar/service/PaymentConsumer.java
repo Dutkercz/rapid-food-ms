@@ -13,7 +13,7 @@ public class PaymentConsumer {
 
     private final PaymentService paymentService;
 
-    @KafkaListener(topics = "payment-topic", groupId = "rapid-food-group")
+    //@KafkaListener(topics = "payment-topic", groupId = "rapid-food-group")
     public void consume(PaymentEvent event) {
         log.info("Payment event received. paymentId={}, orderId={}",
                 event.paymentId(),
