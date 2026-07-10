@@ -8,6 +8,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 kafka:
   topics:
     create-order: "order.created"

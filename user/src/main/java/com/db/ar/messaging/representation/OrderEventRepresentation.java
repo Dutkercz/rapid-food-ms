@@ -1,8 +1,14 @@
 package com.db.ar.messaging.representation;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 public record OrderEventRepresentation(
-        Long userId,
-        Long orderId,
-        StatusPaymentRep statusPayment
+        Long id,
+        BigDecimal totalAmount,
+        String vendorName,
+        OrderStatusRep orderStatus,
+        PaymentStatusRep paymentStatus,
+        LocalDateTime createdAt
 ) {
 }

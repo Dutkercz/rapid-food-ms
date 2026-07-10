@@ -1,19 +1,23 @@
 package com.db.ar.mapper;
 
-
 import com.db.ar.domain.User;
 import com.db.ar.dto.CreateUserRequest;
+import com.db.ar.dto.UpdateUserRequest;
 import com.db.ar.dto.UserResponse;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class UserMapper {
+@Mapper(componentModel = "spring",
+nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface UserMapper {
 
-    public User toEntity(CreateUserRequest request, String passwordHash) {
-        return new User(request.name(), request.email(), passwordHash);
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "passwordHash",  source = "passwordHash")
+    User toEntity(CreateUserRequest request, String passwordHash);
 
-    public UserResponse toResponse(User user) {
-        return new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getActive(), user.getCreatedAt());
-    }
+    UserResponse toResponse(User user);
+
+    void updateEntity(@MappingTarget User user, UpdateUserRequest request, String passwordHash);
 }

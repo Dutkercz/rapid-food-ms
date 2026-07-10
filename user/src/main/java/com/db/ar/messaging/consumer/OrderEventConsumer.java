@@ -20,7 +20,7 @@ public class OrderEventConsumer {
         try {
             log.info("Evento de criação de pedido recebido {}" , json);
             var respresentation = objectMapper.readValue(json, OrderEventRepresentation.class);
-            //resto da logica
+
         } catch (JsonProcessingException e) {
             log.error("Erro no evento de criação de pedido {}", json);
             throw new RuntimeException(e);

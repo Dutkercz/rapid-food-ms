@@ -9,10 +9,12 @@ import com.db.ar.exception.UserNotFoundException;
 import com.db.ar.mapper.UserMapper;
 import com.db.ar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 
 
 @Service
@@ -21,43 +23,51 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder encoder;
 
     @Transactional
     public UserResponse create(CreateUserRequest request) {
         if (userRepository.existsByEmailEqualsIgnoreCase(request.email().trim())) {
             throw new EmailAlreadyExistsException(request.email());
         }
-        String passwordHash = passwordEncoder.encode(request.password());
+
+        String passwordHash = encoder.encode(request.password());
+
         User user = userMapper.toEntity(request, passwordHash);
+
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
     }
 
     @Transactional(readOnly = true)
     public UserResponse getById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = findUser(id);
         return userMapper.toResponse(user);
     }
 
     @Transactional
     public UserResponse update(Long id, UpdateUserRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = findUser(id);
         if (request.email() != null && userRepository.existsByEmailEqualsIgnoreCaseAndIdNot(request.email(), id)) {
             throw new EmailAlreadyExistsException(request.email());
         }
         String passwordHash = null;
         if (request.password() != null) {
-            passwordHash = passwordEncoder.encode(request.password());
+            passwordHash = encoder.encode(request.password());
         }
-        user.update(
-                request.name(),
-                request.email(),
-                passwordHash,
-                request.active());
-        User savedUser = userRepository.save(user);
-        return userMapper.toResponse(savedUser);
+        userMapper.updateEntity(user, request, passwordHash);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        /// publicar evento de update de usuario
+
+        return userMapper.toResponse(user);
+    }
+
+    ///================///
+    ///Private Methods///
+    ///================///
+
+    private User findUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }

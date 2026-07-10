@@ -7,12 +7,13 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
@@ -39,26 +40,13 @@ public class User {
 
     private LocalDateTime updatedAt;
 
-    public User( String name, String email, String passwordHash) {
-        this.name = name;
-        this.email = email;
-        this.passwordHash = passwordHash;
+    public User() {
+        init();
     }
 
-    public void update(String name, String email, String passwordHash, Boolean active) {
-        if (name != null) {
-            this.name = name;
-        }
-        if (email != null) {
-            this.email = email;
-        }
-        if (passwordHash != null) {
-            this.passwordHash = passwordHash;
-        }
-        if (active != null) {
-            this.active = active;
-        }
-        this.updatedAt = LocalDateTime.now();
+    private void init() {
+        this.active = true;
+        this.createdAt = LocalDateTime.now();
     }
 }
 
