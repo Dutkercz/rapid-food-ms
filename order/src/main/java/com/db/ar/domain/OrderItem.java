@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -18,8 +17,8 @@ import java.util.UUID;
 public class OrderItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     private Order order;
@@ -31,7 +30,7 @@ public class OrderItem {
     private BigDecimal total;
 
     @Column(nullable = false)
-    private UUID productId;
+    private Long productId;
 
     @Column(nullable = false)
     private String productName;

@@ -2,6 +2,7 @@ package com.db.ar.mapper;
 
 import com.db.ar.domain.OrderItem;
 import com.db.ar.dto.OrderItemRequestDto;
+import com.db.ar.dto.OrderItemResponseDto;
 import com.db.ar.feign.dtos.ProductFeignDto;
 import org.mapstruct.*;
 
@@ -24,4 +25,7 @@ public interface OrderItemMapper {
         orderItem.setTotal(productFeignDto.price().multiply(
                 BigDecimal.valueOf(orderItemReq.quantity())));
     }
+
+
+    OrderItemResponseDto toResponseDto(OrderItem orderItem);
 }

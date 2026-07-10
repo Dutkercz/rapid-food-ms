@@ -17,19 +17,22 @@ import com.db.ar.mapper.OrderItemMapper;
 import com.db.ar.mapper.OrderMapper;
 import com.db.ar.repository.OrderRepository;
 import com.db.ar.service.utils.TotalAmountCalc;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -42,13 +45,79 @@ public class OrderService {
     private final UserFeignClient userFeign;
     private final VendorFeignClient vendorFeign;
     private final ProductFeignClient productFeign;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
-    private Order findOrder(UUID id) {
+
+    @Transactional
+    public OrderResponseDto createOrder(OrderRequestDto requestDto) {
+        var vendor = findVendor(requestDto.vendorId());
+        var user = findUser(requestDto.userId());
+
+        var list = getOrderItems(requestDto).toList();
+        var total = TotalAmountCalc.calculate(list);
+
+        Order order = orderMapper.toEntity(requestDto, list, vendor, user, total);
+        list.forEach(order::addItem);
+        orderRepository.save(order);
+
+
+        return orderMapper.toDtoResponse(order);
+    }
+
+
+    public OrderStatusDto viewOrderStatus( Long id) {
+        Order order = findOrder(id);
+        return orderMapper.toOrderStatus(order);
+    }
+
+    @Transactional
+    public OrderStatusDto cancelOrder( Long id, @Valid OrderCancelReasonDto reasonDto) {
+        Order order = findOrder(id);
+        order.cancel(reasonDto.reason());
+        // publicar evento para devolver pagamento
+        order.setObservation(reasonDto.reason());
+        return orderMapper.toOrderStatus(order);
+    }
+
+    public Page<OrderResponseDto> getOrders( Long userId, Pageable pageable) {
+        UserFeignDto userFeignDto = findUser(userId);
+        Page<Order> orders = orderRepository.findAllByUserOrderedDesc(userFeignDto.id(), pageable);
+        return orders.map(orderMapper::toDtoResponse);
+    }
+
+    public UserFeignDto getClient( Long clientId) {
+        return findUser(clientId);
+    }
+
+    public VendorFeignDto getVendor( Long vendorId) {
+        return findVendor(vendorId);
+    }
+
+    public ProductFeignDto getProduct( Long productId) {
+        return findProduct(productId);
+    }
+
+    /// ===================================
+    /// ========= Private Methods =========
+    /// ===================================
+
+    private Order findOrder( Long id) {
         return orderRepository.findById(id)
                               .orElseThrow(() -> new EntityNotFoundException("Order with id " + id + " not found"));
     }
 
-    private UserFeignDto findUser(UUID id) {
+    private Stream<OrderItem> getOrderItems(OrderRequestDto requestDto) {
+        return requestDto.items().stream().map(orderItemReq -> {
+            var product = findProduct(orderItemReq.productId());
+            if (!product.vendorId().equals(requestDto.vendorId())) {
+                throw new IllegalArgumentException("Invalid vendor id for item " + product.id());
+            }
+            return orderItemMapper.toEntity(orderItemReq, product);
+        });
+    }
+
+    private UserFeignDto findUser( Long id) {
         ResponseEntity<UserFeignDto> response = userFeign.getById(id);
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
@@ -58,7 +127,7 @@ public class OrderService {
         }
     }
 
-    private VendorFeignDto findVendor(UUID vendorId) {
+    private VendorFeignDto findVendor( Long vendorId) {
         var response = vendorFeign.findById(vendorId);
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
@@ -68,7 +137,7 @@ public class OrderService {
         }
     }
 
-    public ProductFeignDto findProduct(UUID productId) {
+    private ProductFeignDto findProduct( Long productId) {
         ResponseEntity<ProductFeignDto> response = productFeign.getById(productId);
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
@@ -76,63 +145,5 @@ public class OrderService {
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with id " + productId + " not found");
         }
-    }
-
-    @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto requestDto) {
-        Order order = new Order();
-        var vendor = findVendor(requestDto.vendorId());
-        var user = findUser(requestDto.userId());
-
-
-        var list = requestDto.items().stream().map(orderItemReq -> {
-            var product = findProduct(orderItemReq.productId());
-            if (!product.vendorId().equals(requestDto.vendorId())) {
-                throw new IllegalArgumentException("Invalid vendor id for item " + product.id());
-            }
-            return orderItemMapper.toEntity(orderItemReq, product);
-        }).toList();
-
-        var total = TotalAmountCalc.calculate(list);
-
-        Order oder = orderMapper.toEntity(requestDto, list, vendor, user, total);
-
-
-        orderRepository.save(order);
-        return orderMapper.toDtoResponse(order);
-    }
-
-    public OrderStatusDto viewOrderStatus(UUID id) {
-        Order order = findOrder(id);
-        return orderMapper.toOrderStatus(order);
-    }
-
-    @Transactional
-    public OrderStatusDto cancelOrder(UUID id, @Valid OrderCancelReasonDto reasonDto) {
-        Order order = findOrder(id);
-        if (order.getStatus().cantBeCancelled()) {
-            throw new IllegalStateException("Order cant be cancelled with status " + order.getStatus());
-        }
-        order.setStatus(OrderStatus.CANCELED);
-        order.setObservation(reasonDto.reason());
-        return orderMapper.toOrderStatus(order);
-    }
-
-    public Page<OrderResponseDto> getOrders(UUID userId, Pageable pageable) {
-        UserFeignDto userFeignDto = userFeign.getById(userId).getBody();
-        Page<Order> orders = orderRepository.findAllByUserOrderedDesc(userFeignDto.id(), pageable);
-        return orders.map(orderMapper::toDtoResponse);
-    }
-
-    public UserFeignDto getClient(UUID clientId) {
-        return findUser(clientId);
-    }
-
-    public VendorFeignDto getVendor(UUID vendorId) {
-        return findVendor(vendorId);
-    }
-
-    public ProductFeignDto getProduct(UUID productId) {
-        return findProduct(productId);
     }
 }

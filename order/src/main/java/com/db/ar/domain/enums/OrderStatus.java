@@ -6,6 +6,7 @@ public enum OrderStatus {
     public boolean cantBeCancelled() {
         return this == PREPARING || this == DELIVERED || this == CANCELED;
     }
+
     public boolean cantBePaid() {
         return this != CREATED;
     }

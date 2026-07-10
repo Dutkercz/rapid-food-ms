@@ -7,14 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.UUID;
-
-public interface OrderRepository extends JpaRepository<Order, UUID> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("""
            SELECT o FROM Order o
            where o.userId = :userId
            ORDER BY o.createdAt DESC
            """)
-    Page<Order> findAllByUserOrderedDesc(@Param("userId") UUID userId, Pageable pageable);
+    Page<Order> findAllByUserOrderedDesc(@Param("userId") Long userId, Pageable pageable);
 }

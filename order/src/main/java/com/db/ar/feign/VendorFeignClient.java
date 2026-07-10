@@ -6,11 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.UUID;
-
 @FeignClient(url = "http://localhost:8085/api/vendors", name = "order.vemdors")
 public interface VendorFeignClient {
 
     @GetMapping("/{vendorId}")
-    ResponseEntity<VendorFeignDto> findById(@PathVariable UUID vendorId);
+    ResponseEntity<VendorFeignDto> findById(@PathVariable Long vendorId);
 }

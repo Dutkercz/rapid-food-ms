@@ -16,14 +16,16 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
-//    @Mapping(target = "userName", source = "user.name")
-//    @Mapping(target = "vendorName", source = "vendor.name")
     OrderResponseDto toDtoResponse(Order order);
 
     OrderStatusDto toOrderStatus(Order order);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "totalAmount", source = "total")
-    Order toEntity(OrderRequestDto requestDto, List<OrderItem> list,
-                   VendorFeignDto vendor, UserFeignDto user, BigDecimal total);
+    @Mapping(target = "items", ignore = true)
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "userName", source = "user.name")
+    @Mapping(target = "vendorId", source = "vendor.id")
+    @Mapping(target = "vendorName", source = "vendor.name")
+    Order toEntity(OrderRequestDto requestDto, List<OrderItem> items, VendorFeignDto vendor, UserFeignDto user, BigDecimal total);
 }
