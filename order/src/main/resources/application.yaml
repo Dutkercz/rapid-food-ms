@@ -5,6 +5,14 @@ spring:
     username: "root"
     password: "$CDB1234r"
     url: "jdbc:mysql://localhost:3306/rapid-food_orders?createDatabaseIfNotExist=true"
+  jpa:
+    hibernate:
+      ddl-auto: update
+kafka:
+  topics:
+    create-order: "order.created"
+    update-order: "order.updated"
+    delete-order: "order.deleted"
 
 server:
   port: 8081

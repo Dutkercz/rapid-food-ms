@@ -12,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -30,23 +30,23 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponseDto> getById(@PathVariable UUID productId) {
+    public ResponseEntity<ProductResponseDto> getById(@PathVariable Long productId) {
         return ResponseEntity.ok(productService.getById(productId));
     }
 
-    @GetMapping("/{vendorId}")
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts(@PathVariable UUID vendorId) {
+    @GetMapping("/vendor/{vendorId}")
+    public ResponseEntity<List<ProductResponseDto>> getAllProducts(@PathVariable Long vendorId) {
         return ResponseEntity.ok(productService.getAllProducts(vendorId));
     }
 
     @PatchMapping("/{vendorId}")
     public ResponseEntity<ProductResponseDto> updateProduct(@RequestBody @Valid ProductUpdateDto updateDto,
-                                                            @PathVariable UUID vendorId) {
+                                                            @PathVariable Long vendorId) {
         return ResponseEntity.ok(productService.updateProduct(updateDto, vendorId));
     }
 
     @DeleteMapping("/{vendorId}/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable UUID vendorId, @PathVariable UUID productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long vendorId, @PathVariable Long productId) {
         productService.deleteProduct(vendorId, productId);
         return ResponseEntity.noContent().build();
     }

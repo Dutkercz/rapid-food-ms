@@ -1,15 +1,11 @@
 package com.db.ar.dto;
 
 import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public record ProductUpdateDto(
-    @NotNull
-    UUID id,
+        @NotNull Long id,
 
-    String description,
-
-    BigDecimal price) {
+        String description,
+        BigDecimal price) {
 }
