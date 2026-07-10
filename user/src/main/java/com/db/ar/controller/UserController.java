@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,12 +25,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserResponse getById(@PathVariable UUID id) {
+    public UserResponse getById(@PathVariable Long id) {
         return userService.getById(id);
     }
 
     @PatchMapping("/{id}")
-    public UserResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateUserRequest request) {
+    public UserResponse update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest request) {
         return userService.update(id, request);
     }
 }
