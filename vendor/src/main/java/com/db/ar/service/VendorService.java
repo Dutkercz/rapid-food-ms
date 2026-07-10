@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,13 +28,13 @@ public class VendorService {
     }
 
     @Transactional(readOnly = true)
-    public Vendor findById(UUID id) {
+    public Vendor findById(Long id) {
         return vendorRepository.findById(id)
                 .orElseThrow(() -> new VendorNotFoundException("Restaurante não encontrado com o ID: " + id));
     }
 
     @Transactional
-    public void deactivate(UUID id) {
+    public void deactivate(Long id) {
         Vendor vendor = findById(id);
         vendor.deactivate();
         vendorRepository.save(vendor);

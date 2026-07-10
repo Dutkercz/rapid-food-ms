@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/vendors")
@@ -54,7 +53,7 @@ public class VendorController {
             @ApiResponse(responseCode = "404", description = "Restaurante nao encontrado", content = @Content)
     })
     @GetMapping("/{id}")
-        public ResponseEntity<VendorResponse> findById(@PathVariable UUID id) {
+        public ResponseEntity<VendorResponse> findById(@PathVariable Long id) {
         Vendor vendor = vendorService.findById(id);
         return ResponseEntity.ok(vendorMapper.toResponse(vendor));
     }
@@ -66,7 +65,7 @@ public class VendorController {
             @ApiResponse(responseCode = "409", description = "Conflito: Restaurante já está inativo", content = @Content)
     })
     @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable UUID id) {
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
         vendorService.deactivate(id);
         return ResponseEntity.noContent().build();
     }
