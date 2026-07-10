@@ -7,10 +7,10 @@ import com.db.ar.dto.OrderRequestDto;
 import com.db.ar.dto.OrderResponseDto;
 import com.db.ar.dto.OrderStatusDto;
 import com.db.ar.feign.product.ProductFeignClient;
-import com.db.ar.feign.user.UserFeignClient;
-import com.db.ar.feign.vendor.VendorFeignClient;
 import com.db.ar.feign.product.ProductFeignDto;
+import com.db.ar.feign.user.UserFeignClient;
 import com.db.ar.feign.user.UserFeignDto;
+import com.db.ar.feign.vendor.VendorFeignClient;
 import com.db.ar.feign.vendor.VendorFeignDto;
 import com.db.ar.mapper.OrderItemMapper;
 import com.db.ar.mapper.OrderMapper;
@@ -21,6 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,7 @@ public class OrderService {
         Page<Order> orders = orderRepository.findAllByUserOrderedDesc(userFeignDto.id(), pageable);
         return orders.map(orderMapper::toDtoResponse);
     }
+
 
     public UserFeignDto getClient( Long clientId) {
         return findUser(clientId);
