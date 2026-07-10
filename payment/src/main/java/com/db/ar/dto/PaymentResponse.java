@@ -4,11 +4,10 @@ import com.db.ar.domain.enums.PaymentMethod;
 import com.db.ar.domain.enums.PaymentStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public record PaymentResponse(
-        UUID id,
-        UUID orderId,
+        Long id,
+        Long orderId,
         BigDecimal amount,
         PaymentStatus status,
         PaymentMethod paymentMethod,

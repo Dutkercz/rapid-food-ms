@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -36,7 +34,7 @@ public class PaymentService {
 //    }
 
     @Transactional
-    public void confirmPayment(UUID paymentId) {
+    public void confirmPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new EntityNotFoundException("Payment with id " + paymentId + " not found"));
         payment.pay();
