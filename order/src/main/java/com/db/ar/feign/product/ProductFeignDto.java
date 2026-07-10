@@ -1,4 +1,4 @@
-package com.db.ar.feign.dtos;
+package com.db.ar.feign.product;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

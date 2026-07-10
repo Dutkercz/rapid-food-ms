@@ -1,6 +1,5 @@
-package com.db.ar.feign;
+package com.db.ar.feign.product;
 
-import com.db.ar.feign.dtos.ProductFeignDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

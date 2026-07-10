@@ -1,4 +1,4 @@
-package com.db.ar.feign.dtos;
+package com.db.ar.feign.user;
 
 import java.time.LocalDateTime;
 

@@ -5,8 +5,9 @@ import com.db.ar.domain.OrderItem;
 import com.db.ar.dto.OrderRequestDto;
 import com.db.ar.dto.OrderResponseDto;
 import com.db.ar.dto.OrderStatusDto;
-import com.db.ar.feign.dtos.UserFeignDto;
-import com.db.ar.feign.dtos.VendorFeignDto;
+import com.db.ar.feign.user.UserFeignDto;
+import com.db.ar.feign.vendor.VendorFeignDto;
+import com.db.ar.messaging.producer.representation.OrderProducerRep;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -28,4 +29,7 @@ public interface OrderMapper {
     @Mapping(target = "vendorId", source = "vendor.id")
     @Mapping(target = "vendorName", source = "vendor.name")
     Order toEntity(OrderRequestDto requestDto, List<OrderItem> items, VendorFeignDto vendor, UserFeignDto user, BigDecimal total);
+
+
+    OrderProducerRep toOrderProducer(Order order);
 }

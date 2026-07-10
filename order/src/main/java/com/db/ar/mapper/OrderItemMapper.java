@@ -3,7 +3,8 @@ package com.db.ar.mapper;
 import com.db.ar.domain.OrderItem;
 import com.db.ar.dto.OrderItemRequestDto;
 import com.db.ar.dto.OrderItemResponseDto;
-import com.db.ar.feign.dtos.ProductFeignDto;
+import com.db.ar.feign.product.ProductFeignDto;
+import com.db.ar.messaging.producer.representation.OrderItemProducerRep;
 import org.mapstruct.*;
 
 import java.math.BigDecimal;
@@ -28,4 +29,6 @@ public interface OrderItemMapper {
 
 
     OrderItemResponseDto toResponseDto(OrderItem orderItem);
+
+    OrderItemProducerRep toProducerDto(OrderItem orderItem);
 }

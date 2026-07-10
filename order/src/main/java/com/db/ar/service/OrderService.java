@@ -2,32 +2,29 @@ package com.db.ar.service;
 
 import com.db.ar.domain.Order;
 import com.db.ar.domain.OrderItem;
-import com.db.ar.domain.enums.OrderStatus;
 import com.db.ar.dto.OrderCancelReasonDto;
 import com.db.ar.dto.OrderRequestDto;
 import com.db.ar.dto.OrderResponseDto;
 import com.db.ar.dto.OrderStatusDto;
-import com.db.ar.feign.ProductFeignClient;
-import com.db.ar.feign.UserFeignClient;
-import com.db.ar.feign.VendorFeignClient;
-import com.db.ar.feign.dtos.ProductFeignDto;
-import com.db.ar.feign.dtos.UserFeignDto;
-import com.db.ar.feign.dtos.VendorFeignDto;
+import com.db.ar.feign.product.ProductFeignClient;
+import com.db.ar.feign.user.UserFeignClient;
+import com.db.ar.feign.vendor.VendorFeignClient;
+import com.db.ar.feign.product.ProductFeignDto;
+import com.db.ar.feign.user.UserFeignDto;
+import com.db.ar.feign.vendor.VendorFeignDto;
 import com.db.ar.mapper.OrderItemMapper;
 import com.db.ar.mapper.OrderMapper;
+import com.db.ar.messaging.producer.OrderProducer;
 import com.db.ar.repository.OrderRepository;
 import com.db.ar.service.utils.TotalAmountCalc;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -45,9 +42,7 @@ public class OrderService {
     private final UserFeignClient userFeign;
     private final VendorFeignClient vendorFeign;
     private final ProductFeignClient productFeign;
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ObjectMapper objectMapper;
-
+    private final OrderProducer orderProducer;
 
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
@@ -61,6 +56,7 @@ public class OrderService {
         list.forEach(order::addItem);
         orderRepository.save(order);
 
+        orderProducer.sendOrder(orderMapper.toOrderProducer(order));
 
         return orderMapper.toDtoResponse(order);
     }

@@ -1,6 +1,6 @@
-package com.db.ar.messaging;
+package com.db.ar.messaging.producer;
 
-import com.db.ar.domain.Order;
+import com.db.ar.messaging.producer.representation.OrderProducerRep;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +25,11 @@ public class OrderProducer {
     @Value("${kafka.topics.delete-order}")
     private String topicDeleteOrder;
 
-    public void sendOrder(Order order) {
+    public void sendOrder(OrderProducerRep order) {
         try {
+            log.info("Sending order {} to topic {}", order, topicCreateOrder);
             var json = objectMapper.writeValueAsString(order);
-            kafkaTemplate.send(topicCreateOrder,order.getId().toString(), json);
+            kafkaTemplate.send(topicCreateOrder,order.id().toString(), json);
         }catch (Exception e){
             log.error(e.getMessage());
         }

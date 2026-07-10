@@ -1,12 +1,13 @@
-package com.db.ar.feign;
+package com.db.ar.feign.user;
 
-import com.db.ar.feign.dtos.UserFeignDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(url = "http://localhost:8084/api/users", name = "order.user")
+@FeignClient(url = "http://localhost:8084/api/users",
+        name = "order.user",
+        fallbackFactory = UserFeignClientFallback.class)
 public interface UserFeignClient {
 
     @GetMapping("/{userId}")
