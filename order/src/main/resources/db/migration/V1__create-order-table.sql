@@ -6,6 +6,8 @@ CREATE TABLE orders(
         order_status IN ('CREATED', 'SENT_TO_VENDOR', 'ACCEPTED', 'PREPARING', 'DELIVERED', 'CANCELED')),
     payment_status VARCHAR(30) NOT NULL CHECK (
         payment_status IN ( 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED', 'REFUNDED')),
+    payment_method ENUM('PIX', 'CREDIT_CARD',  'DEBIT_CARD', 'CASH') NOT NULL,
+    payment_key VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     user_id BIGINT NOT NULL,
