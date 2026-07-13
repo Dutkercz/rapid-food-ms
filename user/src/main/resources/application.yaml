@@ -10,6 +10,6 @@ spring:
       ddl-auto: update
 
 kafka:
-  botstrap-server: "localhost:29092"
+  bootstrap-server: "localhost:29092"
 server:
   port: 8084

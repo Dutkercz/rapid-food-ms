@@ -5,3 +5,5 @@ spring:
     active: "mysql"
 server:
   port: 8085
+kafka:
+  bootstrap-server: "localhost:29092"

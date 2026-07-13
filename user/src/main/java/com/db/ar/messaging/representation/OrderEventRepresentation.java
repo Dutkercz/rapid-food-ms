@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 public record OrderEventRepresentation(
         Long id,
         BigDecimal totalAmount,
-        String vendorName,
+        Long userId,
+        Long vendorId,
         OrderStatusRep orderStatus,
         PaymentStatusRep paymentStatus,
         LocalDateTime createdAt
