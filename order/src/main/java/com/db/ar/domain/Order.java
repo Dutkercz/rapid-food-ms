@@ -36,6 +36,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderPaymentStatus paymentStatus;
 
+    @Column(nullable = false)
+    private String paymentKey;
+
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
@@ -64,7 +67,9 @@ public class Order {
     private void init() {
         this.orderStatus = OrderStatus.CREATED;
         this.createdAt = LocalDateTime.now();
-        this.items = new ArrayList<>();
+        if(items == null){
+            this.items = new ArrayList<>();
+        }
     }
 
     public void addItem(OrderItem item) {

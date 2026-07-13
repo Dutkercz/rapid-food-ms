@@ -5,6 +5,7 @@ import com.db.ar.domain.enums.OrderStatus;
 import com.db.ar.dto.OrderItemResponseDto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record OrderProducerRep(
@@ -14,6 +15,7 @@ public record OrderProducerRep(
         Long vendorId,
         OrderStatus orderStatus,
         OrderPaymentStatus paymentStatus,
+        LocalDateTime createdAt,
         List<OrderItemProducerRep> items
 ) {
 }

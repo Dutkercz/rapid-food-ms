@@ -24,6 +24,7 @@ public interface OrderMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "totalAmount", source = "total")
     @Mapping(target = "items", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "userName", source = "user.name")
     @Mapping(target = "vendorId", source = "vendor.id")

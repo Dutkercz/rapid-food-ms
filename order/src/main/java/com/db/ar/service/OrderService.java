@@ -2,6 +2,7 @@ package com.db.ar.service;
 
 import com.db.ar.domain.Order;
 import com.db.ar.domain.OrderItem;
+import com.db.ar.domain.enums.OrderPaymentStatus;
 import com.db.ar.dto.OrderCancelReasonDto;
 import com.db.ar.dto.OrderRequestDto;
 import com.db.ar.dto.OrderResponseDto;
@@ -30,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -50,11 +53,15 @@ public class OrderService {
         var vendor = findVendor(requestDto.vendorId());
         var user = findUser(requestDto.userId());
 
+        String paymentKey = UUID.randomUUID().toString();
+
         var list = getOrderItems(requestDto).toList();
         var total = TotalAmountCalc.calculate(list);
 
         Order order = orderMapper.toEntity(requestDto, list, vendor, user, total);
         list.forEach(order::addItem);
+        order.setPaymentKey(paymentKey);
+        order.setPaymentStatus(OrderPaymentStatus.PENDING);
         orderRepository.save(order);
 
         orderProducer.sendOrder(orderMapper.toOrderProducer(order));
@@ -108,7 +115,7 @@ public class OrderService {
     private Stream<OrderItem> getOrderItems(OrderRequestDto requestDto) {
         return requestDto.items().stream().map(orderItemReq -> {
             var product = findProduct(orderItemReq.productId());
-            if (!product.vendorId().equals(requestDto.vendorId())) {
+            if (!Objects.equals(product.id(), requestDto.vendorId())) {
                 throw new IllegalArgumentException("Invalid vendor id for item " + product.id());
             }
             return orderItemMapper.toEntity(orderItemReq, product);
