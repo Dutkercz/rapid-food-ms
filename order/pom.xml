@@ -45,6 +45,13 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <!--Testando redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!--remover se der errado /\ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

@@ -21,9 +21,8 @@ public class OrderEventConsumer {
     public void orderCreatedEvent(String json){
         try {
             log.info("Evento de criação de pedido recebido {}" , json);
-            var respresentation = objectMapper.readValue(json, OrderEventRepresentation.class);
-            userOrderService.saveUserOrder(respresentation);
-
+            var representation = objectMapper.readValue(json, OrderEventRepresentation.class);
+            userOrderService.saveUserOrder(representation);
         } catch (JsonProcessingException e) {
             log.error("Erro no evento de criação de pedido {}", json);
             throw new RuntimeException(e);

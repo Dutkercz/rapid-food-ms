@@ -2,6 +2,7 @@ package com.db.ar.messaging.producer.representation;
 
 import com.db.ar.domain.enums.OrderPaymentStatus;
 import com.db.ar.domain.enums.OrderStatus;
+import com.db.ar.domain.enums.PaymentMethod;
 import com.db.ar.dto.OrderItemResponseDto;
 
 import java.math.BigDecimal;
@@ -15,6 +16,8 @@ public record OrderProducerRep(
         Long vendorId,
         OrderStatus orderStatus,
         OrderPaymentStatus paymentStatus,
+        String paymentKey,
+        PaymentMethod paymentMethod,
         LocalDateTime createdAt,
         List<OrderItemProducerRep> items
 ) {

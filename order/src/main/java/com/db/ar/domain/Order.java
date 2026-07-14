@@ -3,6 +3,7 @@ package com.db.ar.domain;
 
 import com.db.ar.domain.enums.OrderPaymentStatus;
 import com.db.ar.domain.enums.OrderStatus;
+import com.db.ar.domain.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,6 +39,9 @@ public class Order {
 
     @Column(nullable = false)
     private String paymentKey;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;

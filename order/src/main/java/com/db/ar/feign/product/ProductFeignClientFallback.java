@@ -13,9 +13,10 @@ public class ProductFeignClientFallback implements FallbackFactory<ProductFeignC
         return new ProductFeignClient() {
             @Override
             public ResponseEntity<ProductFeignDto> getById(Long productId) {
-                var productResponse = new ProductFeignDto(productId, "indisponível",
-                  "indisponível", null,  null, null, null, null);
-                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(productResponse);
+                var productFallback = new ProductFeignDto(
+                        productId, "indisponível", "indisponível",
+                        null, null, null, null, null);
+                return ResponseEntity.ok(productFallback);
             }
         };
     }

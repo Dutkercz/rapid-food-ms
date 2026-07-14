@@ -7,11 +7,8 @@ import com.db.ar.dto.OrderCancelReasonDto;
 import com.db.ar.dto.OrderRequestDto;
 import com.db.ar.dto.OrderResponseDto;
 import com.db.ar.dto.OrderStatusDto;
-import com.db.ar.feign.product.ProductFeignClient;
 import com.db.ar.feign.product.ProductFeignDto;
-import com.db.ar.feign.user.UserFeignClient;
 import com.db.ar.feign.user.UserFeignDto;
-import com.db.ar.feign.vendor.VendorFeignClient;
 import com.db.ar.feign.vendor.VendorFeignDto;
 import com.db.ar.mapper.OrderItemMapper;
 import com.db.ar.mapper.OrderMapper;
@@ -22,18 +19,14 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -43,19 +36,21 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
-    private final UserFeignClient userFeign;
-    private final VendorFeignClient vendorFeign;
-    private final ProductFeignClient productFeign;
     private final OrderProducer orderProducer;
+
+    private final UserIntegrationService userIntegrationService;
+    private final VendorIntegrationService vendorIntegrationService;
+    private final ProductIntegrationService productIntegrationService;
+
 
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
-        var vendor = findVendor(requestDto.vendorId());
-        var user = findUser(requestDto.userId());
+        var vendor = getVendor(requestDto.vendorId());
+        var user = getUser(requestDto.userId());
 
         String paymentKey = UUID.randomUUID().toString();
 
-        var list = getOrderItems(requestDto).toList();
+        var list = getOrderItems(requestDto);
         var total = TotalAmountCalc.calculate(list);
 
         Order order = orderMapper.toEntity(requestDto, list, vendor, user, total);
@@ -79,28 +74,30 @@ public class OrderService {
     public OrderStatusDto cancelOrder( Long id, @Valid OrderCancelReasonDto reasonDto) {
         Order order = findOrder(id);
         order.cancel(reasonDto.reason());
+
         // publicar evento para devolver pagamento
+
         order.setObservation(reasonDto.reason());
         return orderMapper.toOrderStatus(order);
     }
 
     public Page<OrderResponseDto> getOrders( Long userId, Pageable pageable) {
-        UserFeignDto userFeignDto = findUser(userId);
+        UserFeignDto userFeignDto = getUser(userId);
         Page<Order> orders = orderRepository.findAllByUserOrderedDesc(userFeignDto.id(), pageable);
         return orders.map(orderMapper::toDtoResponse);
     }
 
 
-    public UserFeignDto getClient( Long clientId) {
-        return findUser(clientId);
+    public UserFeignDto getUser(Long userId) {
+        return userIntegrationService.findeUserById(userId);
     }
 
     public VendorFeignDto getVendor( Long vendorId) {
-        return findVendor(vendorId);
+        return vendorIntegrationService.findVendorById(vendorId);
     }
 
-    public ProductFeignDto getProduct( Long productId) {
-        return findProduct(productId);
+    public ProductFeignDto getProduct(Long productId) {
+        return productIntegrationService.findProductById(productId);
     }
 
     /// ===================================
@@ -112,43 +109,13 @@ public class OrderService {
                               .orElseThrow(() -> new EntityNotFoundException("Order with id " + id + " not found"));
     }
 
-    private Stream<OrderItem> getOrderItems(OrderRequestDto requestDto) {
+    private List<OrderItem> getOrderItems(OrderRequestDto requestDto) {
         return requestDto.items().stream().map(orderItemReq -> {
-            var product = findProduct(orderItemReq.productId());
+            var product = getProduct(orderItemReq.productId());
             if (!Objects.equals(product.id(), requestDto.vendorId())) {
                 throw new IllegalArgumentException("Invalid vendor id for item " + product.id());
             }
             return orderItemMapper.toEntity(orderItemReq, product);
-        });
-    }
-
-    private UserFeignDto findUser( Long id) {
-        ResponseEntity<UserFeignDto> response = userFeign.getById(id);
-        if (response.getStatusCode().is2xxSuccessful()) {
-            return response.getBody();
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + id + " not found");
-        }
-    }
-
-    private VendorFeignDto findVendor( Long vendorId) {
-        var response = vendorFeign.findById(vendorId);
-        if (response.getStatusCode().is2xxSuccessful()) {
-            return response.getBody();
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendor with id " + vendorId + " not found");
-        }
-    }
-
-    private ProductFeignDto findProduct( Long productId) {
-        ResponseEntity<ProductFeignDto> response = productFeign.getById(productId);
-        if (response.getStatusCode().is2xxSuccessful()) {
-            return response.getBody();
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with id " + productId + " not found");
-        }
+        }).toList();
     }
 }

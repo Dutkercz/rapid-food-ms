@@ -18,5 +18,6 @@ public class UserOrderService {
     public void saveUserOrder(OrderEventRepresentation representation) {
         var userOrder = userOrderMapper.toEntity(representation);
         userOrderRepository.save(userOrder);
+        log.info("UserOrder salvo com sucesso {}", userOrder);
     }
 }

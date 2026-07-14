@@ -6,14 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class VendorFeignFallback implements FallbackFactory<VendorFeignClient> {
+public class VendorFeignClientFallback implements FallbackFactory<VendorFeignClient> {
     @Override
     public VendorFeignClient create(Throwable cause) {
         return new VendorFeignClient() {
             @Override
             public ResponseEntity<VendorFeignDto> findById(Long vendorId) {
-                var response = new VendorFeignDto(vendorId, "Indisponivel", "Indisponivel", null);
-                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
+                var vendorFallback = new VendorFeignDto(vendorId, "INDISPONIVEL", "INDISPONIVEL",
+                                                        null);
+                return ResponseEntity.ok().body(vendorFallback);
             }
         };
     }

@@ -11,10 +11,9 @@ public class UserFeignClientFallback implements FallbackFactory<UserFeignClient>
         return new UserFeignClient() {
             @Override
             public ResponseEntity<UserFeignDto> getById(Long userId) {
-                var fallbackUser = new UserFeignDto(
-                        userId, "indisponível", "indisponível",
+                var userFallback = new UserFeignDto(userId, "indisponível", "indisponível",
                         null, null);
-                return ResponseEntity.ok(fallbackUser);
+                return ResponseEntity.ok(userFallback);
             }
         };
     }

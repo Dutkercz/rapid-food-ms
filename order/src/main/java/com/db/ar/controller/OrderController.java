@@ -46,7 +46,7 @@ public class OrderController {
 
     @GetMapping("/client/{clientId}")
     public ResponseEntity<UserFeignDto> viewOrderClient(@PathVariable Long clientId) {
-        return ResponseEntity.ok(orderService.getClient(clientId));
+        return ResponseEntity.ok(orderService.getUser(clientId));
     }
 
     @GetMapping("/product/{productId}")
