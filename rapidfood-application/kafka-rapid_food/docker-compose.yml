@@ -35,3 +35,25 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper_rapid-food:2181
     ports:
       - "8090:8080"
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  redis-ui:
+    image: redis/redisinsight:latest
+    container_name: redis-ui
+    restart: always
+    ports:
+      - "5540:5540"
+    volumes:
+      - redis-ui:/data
+
+volumes:
+  redis-ui:
+  redis_data:
