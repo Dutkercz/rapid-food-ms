@@ -21,8 +21,6 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //order id aqui
-
     @Column(precision = 10, scale = 2)
     private BigDecimal amount;
 
