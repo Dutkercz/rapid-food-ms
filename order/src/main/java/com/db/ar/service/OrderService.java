@@ -61,21 +61,24 @@ public class OrderService {
 
         return orderMapper.toDtoResponse(order);
     }
-
+///==============================================
     @Transactional
     public void createdPaymentOrder(PaymentEventRep paymentRep) {
         Order order = findOrder(paymentRep.orderId());
         orderMapper.updateOrderFromPayment(paymentRep, order);
         order.setUpdatedAt(LocalDateTime.now());
     }
-
+///  - createdPaymentOrder
+///  - updatePaymentOrder
+/// - METODOS ATUALMENTE SEGUEM A MESMO LOGICA, ASSIM COMO O TOPICO... POREM NO FUTURO PODEM E DEVEM TER UM LOGICA
+/// DIFERENTE, POIS UM CRIA O PAGAMENTO E INSE INFOS, O OUTRO APENAS AS ATUALIZA.
     @Transactional
     public void updatePaymentOrder(PaymentEventRep paymentRep) {
         Order order = findOrder(paymentRep.orderId());
         orderMapper.updateOrderFromPayment(paymentRep, order);
         order.setUpdatedAt(LocalDateTime.now());
     }
-
+///===================================================
 
     public OrderStatusDto viewOrderStatus( Long id) {
         Order order = findOrder(id);
