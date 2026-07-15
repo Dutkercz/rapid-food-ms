@@ -1,7 +1,7 @@
 package com.db.ar.domain;
 
 
-import com.db.ar.domain.enums.OrderPaymentStatus;
+import com.db.ar.domain.enums.PaymentStatus;
 import com.db.ar.domain.enums.OrderStatus;
 import com.db.ar.domain.enums.PaymentMethod;
 import jakarta.persistence.*;
@@ -34,8 +34,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    private Long paymentId;
+
     @Enumerated(EnumType.STRING)
-    private OrderPaymentStatus paymentStatus;
+    private PaymentStatus paymentStatus;
 
     @Column(nullable = false)
     private String paymentKey;
@@ -91,7 +93,7 @@ public class Order {
             throw new IllegalStateException("Order cant be cancelled with status " + this.orderStatus);
         }
         this.orderStatus = OrderStatus.CANCELED;
-        this.paymentStatus = OrderPaymentStatus.CANCELLED;
+        this.paymentStatus = PaymentStatus.CANCELLED;
         this.observation = reason;
         this.updatedAt = LocalDateTime.now();
     }

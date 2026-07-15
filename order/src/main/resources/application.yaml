@@ -12,6 +12,8 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+  kafka:
+    bootstrap-servers: "http://localhost:29092"
 kafka:
   topics:
     create-order: "order.created"
