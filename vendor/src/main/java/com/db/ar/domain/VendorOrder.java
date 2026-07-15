@@ -1,7 +1,8 @@
 package com.db.ar.domain;
 
-import com.db.ar.messaging.representation.OrderStatusRep;
-import com.db.ar.messaging.representation.PaymentStatusRep;
+import com.db.ar.messaging.representation.commons.OrderStatusRep;
+import com.db.ar.messaging.representation.commons.PaymentMethod;
+import com.db.ar.messaging.representation.commons.PaymentStatusRep;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,8 +33,13 @@ public class VendorOrder {
     private OrderStatusRep orderStatus;
 
     @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
+
+    @Enumerated(EnumType.STRING)
     private PaymentStatusRep paymentStatus;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
 }

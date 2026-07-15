@@ -1,7 +1,8 @@
 package com.db.ar.messaging.consumer;
 
-import com.db.ar.messaging.representation.OrderEventRepresentation;
-import com.db.ar.service.VendorService;
+import com.db.ar.messaging.representation.order.OrderEventRepresentation;
+import com.db.ar.service.VendorOrderService;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class OrderEventConsumer {
 
     private final ObjectMapper objectMapper;
-    private final VendorService vendorService;
+    private final VendorOrderService vendorOrderService;
 
 
     @KafkaListener(topics = "order.created", groupId = "vendor.order-create")
@@ -23,7 +24,7 @@ public class OrderEventConsumer {
         try {
             log.info("Recebendo evento de criação de pedido: {}", json);
             var representation = objectMapper.readValue(json, OrderEventRepresentation.class);
-            vendorService.newVendorOrder(representation);
+            vendorOrderService.newVendorOrder(representation);
         } catch (JsonProcessingException e) {
             log.error("Erro ao receber evento de pedido: {}", json, e);
             throw new RuntimeException(e);

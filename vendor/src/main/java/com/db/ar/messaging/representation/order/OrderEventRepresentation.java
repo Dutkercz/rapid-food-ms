@@ -1,4 +1,7 @@
-package com.db.ar.messaging.representation;
+package com.db.ar.messaging.representation.order;
+
+import com.db.ar.messaging.representation.commons.OrderStatusRep;
+import com.db.ar.messaging.representation.commons.PaymentStatusRep;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

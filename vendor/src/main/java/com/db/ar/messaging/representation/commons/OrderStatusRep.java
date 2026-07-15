@@ -1,4 +1,4 @@
-package com.db.ar.messaging.representation;
+package com.db.ar.messaging.representation.commons;
 
 public enum OrderStatusRep {
     CREATED,
