@@ -15,7 +15,7 @@ public class PaymentEventConsumer {
 
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "payment-update", groupId = "user.payments")
+    @KafkaListener(topics = "payment.created", groupId = "user.payments")
     public void paymentUpdateEvent(String json) {
         try {
             var representation = objectMapper.readValue(json, PaymentUpdateEventRep.class);
