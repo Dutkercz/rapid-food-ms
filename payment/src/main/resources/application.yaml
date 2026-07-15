@@ -7,6 +7,9 @@ spring:
     url: "jdbc:mysql://localhost:3306/rapid-food_payments?createDatabaseIfNotExist=true"
   kafka:
     bootstrap-servers: "http://localhost:29092"
+  jpa:
+    hibernate:
+      ddl-auto: update
 server:
   port: 8082
 

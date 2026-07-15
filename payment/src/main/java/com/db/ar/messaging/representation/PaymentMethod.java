@@ -1,4 +1,4 @@
-package com.db.ar.domain.enums;
+package com.db.ar.messaging.representation;
 
 public enum PaymentMethod {
     PIX,

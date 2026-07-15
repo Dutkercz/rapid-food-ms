@@ -1,6 +1,8 @@
-package com.db.ar.messaging.representation;
+package com.db.ar.messaging.consumer.order;
 
-import com.db.ar.domain.enums.PaymentMethod;
+import com.db.ar.messaging.representation.OrderStatusRep;
+import com.db.ar.messaging.representation.PaymentMethod;
+import com.db.ar.messaging.representation.PaymentStatusRep;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

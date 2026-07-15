@@ -1,10 +1,12 @@
 package com.db.ar.domain;
 
-import com.db.ar.domain.enums.PaymentMethod;
-import com.db.ar.domain.enums.PaymentStatus;
+import com.db.ar.messaging.representation.PaymentMethod;
+import com.db.ar.messaging.representation.OrderStatusRep;
+import com.db.ar.messaging.representation.PaymentStatusRep;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "payments")
 public class Payment {
@@ -21,48 +24,32 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal amount;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status;
+    private Long orderId;
+
+    @Column(nullable = false)
+    private BigDecimal totalAmount;
+
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
+    private Long vendorId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method")
+    private OrderStatusRep orderStatus;
+
+    @Column(nullable = false)
+    private String paymentKey;
+
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Column(updatable = false, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentStatusRep paymentStatus;
+
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column
     private LocalDateTime updatedAt;
-
-    public Payment() {
-        this.status = PaymentStatus.CREATED;
-        this.createdAt = LocalDateTime.now();
-    }
-
-//    public Payment(Order order, PaymentMethod paymentMethod) {
-//        this.order = order;
-//        this.amount = order.getTotalAmount();
-//        this.paymentMethod = paymentMethod;
-//        this.status = PaymentStatus.CREATED;
-//        this.createdAt = LocalDateTime.now();
-//    }
-
-    public void authorize() {
-        this.status = PaymentStatus.AUTHORIZED;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void pay() {
-        this.status = PaymentStatus.PAID;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void refund() {
-        this.status = PaymentStatus.REFUNDED;
-        this.updatedAt = LocalDateTime.now();
-    }
 }
