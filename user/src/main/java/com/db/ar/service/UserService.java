@@ -7,6 +7,7 @@ import com.db.ar.dto.UserResponse;
 import com.db.ar.exception.EmailAlreadyExistsException;
 import com.db.ar.exception.UserNotFoundException;
 import com.db.ar.mapper.UserMapper;
+import com.db.ar.messaging.representation.payment.PaymentEventRep;
 import com.db.ar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -58,7 +59,7 @@ public class UserService {
         userMapper.updateEntity(user, request, passwordHash);
         user.setUpdatedAt(LocalDateTime.now());
 
-        /// publicar evento de update de usuario
+        /// publicar evento de update de usuario ou não
 
         return userMapper.toResponse(user);
     }

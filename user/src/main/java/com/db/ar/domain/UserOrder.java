@@ -1,7 +1,7 @@
 package com.db.ar.domain;
 
-import com.db.ar.messaging.representation.OrderStatusRep;
-import com.db.ar.messaging.representation.PaymentStatusRep;
+import com.db.ar.messaging.representation.commons.OrderStatusRep;
+import com.db.ar.messaging.representation.commons.PaymentStatusRep;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,4 +33,6 @@ public class UserOrder {
     private PaymentStatusRep  paymentStatus;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }
