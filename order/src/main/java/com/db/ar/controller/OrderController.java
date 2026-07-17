@@ -63,7 +63,7 @@ public class OrderController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Page<OrderResponseDto>> getAllOrders(@PathVariable Long userId, Pageable pageable) {
+    public ResponseEntity<Page<OrderResponseDto>> getAllUserOrders(@PathVariable Long userId, Pageable pageable) {
         return ResponseEntity.ok(orderService.getOrders(userId, pageable));
     }
 }

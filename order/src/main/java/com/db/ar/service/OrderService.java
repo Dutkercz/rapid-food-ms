@@ -7,8 +7,11 @@ import com.db.ar.dto.OrderCancelReasonDto;
 import com.db.ar.dto.OrderRequestDto;
 import com.db.ar.dto.OrderResponseDto;
 import com.db.ar.dto.OrderStatusDto;
+import com.db.ar.feign.product.ProductFeignClient;
 import com.db.ar.feign.product.ProductFeignDto;
+import com.db.ar.feign.user.UserFeignClient;
 import com.db.ar.feign.user.UserFeignDto;
+import com.db.ar.feign.vendor.VendorFeignClient;
 import com.db.ar.feign.vendor.VendorFeignDto;
 import com.db.ar.mapper.OrderItemMapper;
 import com.db.ar.mapper.OrderMapper;
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +43,9 @@ public class OrderService {
     private final OrderItemMapper orderItemMapper;
     private final OrderProducer orderProducer;
 
-    private final UserIntegrationService userIntegrationService;
-    private final VendorIntegrationService vendorIntegrationService;
-    private final ProductIntegrationService productIntegrationService;
-
+    ProductFeignClient productFeignClient;
+    UserFeignClient userFeignClient;
+    VendorFeignClient vendorFeignClient;
 
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
@@ -61,24 +64,23 @@ public class OrderService {
 
         return orderMapper.toDtoResponse(order);
     }
-///==============================================
+
     @Transactional
     public void createdPaymentOrder(PaymentEventRep paymentRep) {
         Order order = findOrder(paymentRep.orderId());
         orderMapper.updateOrderFromPayment(paymentRep, order);
+        //enviar o status de pegamento do pedido para 'vendor'
         order.setUpdatedAt(LocalDateTime.now());
     }
-///  - createdPaymentOrder
-///  - updatePaymentOrder
-/// - METODOS ATUALMENTE SEGUEM A MESMO LOGICA, ASSIM COMO O TOPICO... POREM NO FUTURO PODEM E DEVEM TER UM LOGICA
-/// DIFERENTE, POIS UM CRIA O PAGAMENTO E INSE INFOS, O OUTRO APENAS AS ATUALIZA.
+
     @Transactional
     public void updatePaymentOrder(PaymentEventRep paymentRep) {
         Order order = findOrder(paymentRep.orderId());
         orderMapper.updateOrderFromPayment(paymentRep, order);
         order.setUpdatedAt(LocalDateTime.now());
+        //avisar vendor o status atual do pedido
+        //avisar usuario o status atual do pedido
     }
-///===================================================
 
     public OrderStatusDto viewOrderStatus( Long id) {
         Order order = findOrder(id);
@@ -90,7 +92,7 @@ public class OrderService {
         Order order = findOrder(id);
         order.cancel(reasonDto.reason());
 
-        // publicar evento para devolver pagamento
+        // publicar evento para cancelar pagamento
 
         order.setObservation(reasonDto.reason());
         return orderMapper.toOrderStatus(order);
@@ -104,15 +106,27 @@ public class OrderService {
 
 
     public UserFeignDto getUser(Long userId) {
-        return userIntegrationService.findeUserById(userId);
+        ResponseEntity<UserFeignDto> user = userFeignClient.getById(userId);
+        if (user.getStatusCode().is2xxSuccessful() && Objects.nonNull(user.getBody())) {
+            return user.getBody();
+        }
+        throw new EntityNotFoundException("User not found");
     }
 
     public VendorFeignDto getVendor( Long vendorId) {
-        return vendorIntegrationService.findVendorById(vendorId);
+        ResponseEntity<VendorFeignDto> vendorResponse = vendorFeignClient.findById(vendorId);
+        if (vendorResponse.getStatusCode().is2xxSuccessful() && Objects.nonNull(vendorResponse.getBody())) {
+            return vendorResponse.getBody();
+        }
+        throw new EntityNotFoundException("Vendor not found");
     }
 
     public ProductFeignDto getProduct(Long productId) {
-        return productIntegrationService.findProductById(productId);
+        ResponseEntity<ProductFeignDto> productResponse = productFeignClient.getById(productId);
+        if(productResponse.getStatusCode().is2xxSuccessful() && Objects.nonNull(productResponse.getBody())) {
+            return productResponse.getBody();
+        }
+        throw new EntityNotFoundException("Product not found");
     }
 
     /// ===================================
@@ -121,7 +135,7 @@ public class OrderService {
 
     private Order findOrder( Long id) {
         return orderRepository.findById(id)
-                              .orElseThrow(() -> new EntityNotFoundException("Order with id " + id + " not found"));
+              .orElseThrow(() -> new EntityNotFoundException("Order with id " + id + " not found"));
     }
 
     private List<OrderItem> getOrderItems(OrderRequestDto requestDto) {
