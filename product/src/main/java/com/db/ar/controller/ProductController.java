@@ -35,8 +35,8 @@ public class ProductController {
     }
 
     @GetMapping("/vendor/{vendorId}")
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts(@PathVariable Long vendorId) {
-        return ResponseEntity.ok(productService.getAllProducts(vendorId));
+    public ResponseEntity<List<ProductResponseDto>> getAllProductsByVendorId(@PathVariable Long vendorId) {
+        return ResponseEntity.ok(productService.getAllProductsByVendorId(vendorId));
     }
 
     @PatchMapping("/{vendorId}")
