@@ -1,10 +1,8 @@
 package com.db.ar.service;
 
-import com.db.ar.domain.Vendor;
 import com.db.ar.domain.VendorOrder;
-import com.db.ar.exceptions.VendorNotFoundException;
-import com.db.ar.exceptions.VendorOrderNotFoundException;
-import com.db.ar.mapper.VendorMapper;
+import com.db.ar.exception.VendorNotFoundException;
+import com.db.ar.exception.VendorOrderNotFoundException;
 import com.db.ar.mapper.VendorOrderMapper;
 import com.db.ar.messaging.representation.order.OrderEventRepresentation;
 import com.db.ar.messaging.representation.payment.PaymentEventRep;

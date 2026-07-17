@@ -1,4 +1,4 @@
-package com.db.ar.exceptions;
+package com.db.ar.exception;
 
 public class VendorOrderNotFoundException extends RuntimeException {
     public VendorOrderNotFoundException(String message) {
