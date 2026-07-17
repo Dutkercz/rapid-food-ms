@@ -7,6 +7,7 @@ import com.db.ar.dto.OrderCancelReasonDto;
 import com.db.ar.dto.OrderRequestDto;
 import com.db.ar.dto.OrderResponseDto;
 import com.db.ar.dto.OrderStatusDto;
+import com.db.ar.exception.OrderNotFoundException;
 import com.db.ar.feign.product.ProductFeignClient;
 import com.db.ar.feign.product.ProductFeignDto;
 import com.db.ar.feign.user.UserFeignClient;
@@ -23,6 +24,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +45,10 @@ public class OrderService {
     private final OrderItemMapper orderItemMapper;
     private final OrderProducer orderProducer;
 
-    ProductFeignClient productFeignClient;
-    UserFeignClient userFeignClient;
-    VendorFeignClient vendorFeignClient;
+    private final ProductFeignClient productFeignClient;
+    private final UserFeignClient userFeignClient;
+    private final VendorFeignClient vendorFeignClient;
+    private final OrderCacheServer orderCacheServer;
 
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
@@ -67,15 +70,15 @@ public class OrderService {
 
     @Transactional
     public void createdPaymentOrder(PaymentEventRep paymentRep) {
-        Order order = findOrder(paymentRep.orderId());
+        Order order = orderCacheServer.findOrder(paymentRep.orderId());
         orderMapper.updateOrderFromPayment(paymentRep, order);
-        //enviar o status de pegamento do pedido para 'vendor'
+        //enviar o status do pedido para 'vendor', 'user' e 'payment'
         order.setUpdatedAt(LocalDateTime.now());
     }
 
     @Transactional
     public void updatePaymentOrder(PaymentEventRep paymentRep) {
-        Order order = findOrder(paymentRep.orderId());
+        Order order = orderCacheServer.findOrder(paymentRep.orderId());
         orderMapper.updateOrderFromPayment(paymentRep, order);
         order.setUpdatedAt(LocalDateTime.now());
         //avisar vendor o status atual do pedido
@@ -83,13 +86,13 @@ public class OrderService {
     }
 
     public OrderStatusDto viewOrderStatus( Long id) {
-        Order order = findOrder(id);
+        Order order = orderCacheServer.findOrder(id);
         return orderMapper.toOrderStatus(order);
     }
 
     @Transactional
     public OrderStatusDto cancelOrder( Long id, @Valid OrderCancelReasonDto reasonDto) {
-        Order order = findOrder(id);
+        Order order = orderCacheServer.findOrder(id);
         order.cancel(reasonDto.reason());
 
         // publicar evento para cancelar pagamento
@@ -103,8 +106,9 @@ public class OrderService {
         Page<Order> orders = orderRepository.findAllByUserOrderedDesc(userFeignDto.id(), pageable);
         return orders.map(orderMapper::toDtoResponse);
     }
-
-
+    ///==============///
+    ///teste methods///
+    ///==============///
     public UserFeignDto getUser(Long userId) {
         ResponseEntity<UserFeignDto> user = userFeignClient.getById(userId);
         if (user.getStatusCode().is2xxSuccessful() && Objects.nonNull(user.getBody())) {
@@ -132,12 +136,6 @@ public class OrderService {
     /// ===================================
     /// ========= Private Methods =========
     /// ===================================
-
-    private Order findOrder( Long id) {
-        return orderRepository.findById(id)
-              .orElseThrow(() -> new EntityNotFoundException("Order with id " + id + " not found"));
-    }
-
     private List<OrderItem> getOrderItems(OrderRequestDto requestDto) {
         return requestDto.items().stream().map(orderItemReq -> {
             var product = getProduct(orderItemReq.productId());

@@ -8,6 +8,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  cache:
+    type: redis
   cloud:
     openfeign:
       circuitbreaker:
