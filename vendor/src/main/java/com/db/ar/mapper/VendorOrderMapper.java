@@ -10,4 +10,5 @@ public interface VendorOrderMapper {
 
     @Mapping(target = "orderId", source = "rep.id")
     VendorOrder toEntity(OrderEventRepresentation rep);
+
 }

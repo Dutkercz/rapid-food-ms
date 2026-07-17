@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendors")
@@ -45,6 +46,12 @@ public class VendorController {
                 .toUri();
 
         return ResponseEntity.created(location).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<VendorResponse>> findAll() {
+        var list = vendorService.findAll();
+        return ResponseEntity.ok().body(list);
     }
 
     @Operation(summary = "Buscar um restaurante pelo ID", description = "Retorna os detalhes de um restaurante especifico.")
