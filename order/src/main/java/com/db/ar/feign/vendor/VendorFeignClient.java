@@ -1,6 +1,5 @@
 package com.db.ar.feign.vendor;
 
-import com.db.ar.feign.product.ProductFeignFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

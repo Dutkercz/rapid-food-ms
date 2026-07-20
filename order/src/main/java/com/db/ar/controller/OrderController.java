@@ -33,8 +33,19 @@ public class OrderController {
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<OrderStatusDto> viewOrderStatus(@PathVariable Long id) {
+    public ResponseEntity<OrderResponseDto> viewOrderStatus(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.viewOrderStatus(id));
+    }
+
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<OrderStatusDto> cancelOrder(@PathVariable Long id,
+                                                      @RequestBody @Valid OrderCancelReasonDto reasonDto) {
+        return ResponseEntity.ok(orderService.cancelOrder(id, reasonDto));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<Page<OrderResponseDto>> getAllUserOrders(@PathVariable Long userId, Pageable pageable) {
+        return ResponseEntity.ok(orderService.getOrders(userId, pageable));
     }
 
 
@@ -54,16 +65,4 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getProduct(productId));
     }
     //========= end
-
-
-    @PutMapping("/cancel/{id}")
-    public ResponseEntity<OrderStatusDto> cancelOrder(@PathVariable Long id,
-                                                      @RequestBody @Valid OrderCancelReasonDto reasonDto) {
-        return ResponseEntity.ok(orderService.cancelOrder(id, reasonDto));
-    }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<Page<OrderResponseDto>> getAllUserOrders(@PathVariable Long userId, Pageable pageable) {
-        return ResponseEntity.ok(orderService.getOrders(userId, pageable));
-    }
 }

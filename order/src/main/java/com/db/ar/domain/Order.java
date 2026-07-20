@@ -1,9 +1,9 @@
 package com.db.ar.domain;
 
 
-import com.db.ar.domain.enums.PaymentStatus;
 import com.db.ar.domain.enums.OrderStatus;
 import com.db.ar.domain.enums.PaymentMethod;
+import com.db.ar.domain.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,5 @@
 package com.db.ar.feign.product;
 
-import com.db.ar.feign.user.UserFeignClient;
-import com.db.ar.feign.user.UserFeignDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.http.ResponseEntity;
